@@ -22,7 +22,6 @@ public class FlashCardAdapter extends RecyclerView.Adapter<FlashCardAdapter.View
     private Context context;
     private FirebaseFirestore db;
 
-    // Constructor to initialize the list of flashcards and context
     public FlashCardAdapter(List<FlashCard> flashcardList, Context context) {
         this.flashcardList = flashcardList;
         this.context = context;
@@ -32,41 +31,39 @@ public class FlashCardAdapter extends RecyclerView.Adapter<FlashCardAdapter.View
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Inflate the layout for each flashcard item
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.flashcard_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        // Get the flashcard at the current position
         FlashCard flashcard = flashcardList.get(position);
 
-        // Set the question text to the TextView
+        // Set the question text
         holder.questionTextView.setText(flashcard.getQuestion());
 
-        // Set an onClickListener to open the FlashcardViewActivity when the item is clicked
+        // On click listener to open FlashcardViewActivity
         holder.itemView.setOnClickListener(view -> {
-            // Intent to open FlashcardViewActivity
             Intent intent = new Intent(context, FlashcardViewActivity.class);
-            intent.putExtra("flashcardId", flashcard.getId()); // Get the flashcard ID
+            intent.putExtra("flashcardId", flashcard.getId());
             context.startActivity(intent);
         });
 
-        // Set an onClickListener to open the EditFlashcardActivity when the "edit" button is clicked
+        // Edit button to navigate to EditFlashcardActivity
         holder.editButton.setOnClickListener(view -> {
             Intent intent = new Intent(context, EditFlashcardActivity.class);
-            intent.putExtra("flashcardId", flashcard.getId()); // Pass the flashcard ID for editing
+            intent.putExtra("flashcardId", flashcard.getId());
             context.startActivity(intent);
         });
 
-        // Set an onClickListener to delete the flashcard when the "delete" button is clicked
+        // Delete button to delete flashcard from Firestore
         holder.deleteButton.setOnClickListener(view -> {
-            // Remove the flashcard from Firestore
             db.collection("flashcards").document(flashcard.getId())
                     .delete()
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(context, "Flashcard deleted", Toast.LENGTH_SHORT).show();
+                        flashcardList.remove(position);  // Remove from the list
+                        notifyItemRemoved(position);
                     })
                     .addOnFailureListener(e -> {
                         Toast.makeText(context, "Failed to delete flashcard", Toast.LENGTH_SHORT).show();
@@ -79,7 +76,6 @@ public class FlashCardAdapter extends RecyclerView.Adapter<FlashCardAdapter.View
         return flashcardList.size();
     }
 
-    // ViewHolder class to hold views for each flashcard item
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView questionTextView;
         Button editButton, deleteButton;

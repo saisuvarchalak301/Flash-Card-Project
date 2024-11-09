@@ -4,12 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
 
 public class HomeActivity extends AppCompatActivity {
@@ -24,7 +27,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        recyclerView = findViewById(R.id.recycler_view);  // Updated to match XML ID
+        recyclerView = findViewById(R.id.recycler_view);
         flashcards = new ArrayList<>();
         db = FirebaseFirestore.getInstance();
 
@@ -57,7 +60,7 @@ public class HomeActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(HomeActivity.this, "Error loading flashcards", Toast.LENGTH_SHORT).show();
-                    e.printStackTrace(); // Log the error for debugging purposes
+                    e.printStackTrace();
                 });
     }
 }

@@ -1,40 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:background="?android:attr/selectableItemBackground">
+    android:layout_height="wrap_content">
 
-    <!-- Flashcard Question TextView -->
+    <!-- TextView to show the flashcard question -->
     <TextView
         android:id="@+id/questionTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Question"
+        android:textSize="18sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Edit button -->
+    <Button
+        android:id="@+id/editButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Flashcard Question"
-        android:textSize="18sp"
-        android:paddingBottom="8dp"/>
+        android:text="Edit"
+        app:layout_constraintTop_toBottomOf="@id/questionTextView"
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- Edit and Delete Buttons -->
-    <LinearLayout
-        android:layout_width="match_parent"
+    <!-- Delete button -->
+    <Button
+        android:id="@+id/deleteButton"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2">
-
-        <Button
-            android:id="@+id/editButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Edit"/>
-
-        <Button
-            android:id="@+id/deleteButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Delete"/>
-    </LinearLayout>
-
-</LinearLayout>
+        android:text="Delete"
+        app:layout_constraintTop_toBottomOf="@id/questionTextView"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
