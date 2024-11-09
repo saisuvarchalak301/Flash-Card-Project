@@ -19,8 +19,8 @@ import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
-    private FlashcardAdapter adapter;
-    private List<Flashcard> flashcardList;
+    private FlashCardAdapter adapter;
+    private List<FlashCard> flashcardList;
     private FirebaseFirestore db;
 
     @Override
@@ -35,7 +35,7 @@ public class HomeActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         flashcardList = new ArrayList<>();
-        adapter = new FlashcardAdapter(flashcardList, this);
+        adapter = new FlashCardAdapter(flashcardList, this);
         recyclerView.setAdapter(adapter);
 
         // Load flashcards from Firestore
@@ -58,7 +58,7 @@ public class HomeActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         flashcardList.clear();
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            Flashcard flashcard = document.toObject(Flashcard.class);
+                            FlashCard flashcard = document.toObject(FlashCard.class);
                             flashcard.setId(document.getId());
                             flashcardList.add(flashcard);
                         }

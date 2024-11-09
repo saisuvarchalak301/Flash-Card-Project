@@ -1,8 +1,5 @@
 plugins {
-    // Use either one of these, but not both
-    alias(libs.plugins.android.application) // If you have configured a version catalog (libs)
-    // OR
-    // id("com.android.application") // Use this if you're not using the version catalog
+    id("com.android.application")
     id("com.google.gms.google-services")
 }
 
@@ -43,6 +40,16 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
+    // Firebase BOM for version management
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
+
+    // Firebase Analytics
     implementation("com.google.firebase:firebase-analytics")
+
+    // Firebase Firestore
+    implementation("com.google.firebase:firebase-firestore:24.0.0")
+
+    // Firebase Realtime Database
+    implementation("com.google.firebase:firebase-database:20.1.0") // Add this line
 }

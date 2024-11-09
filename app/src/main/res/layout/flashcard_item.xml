@@ -4,28 +4,40 @@
     android:layout_height="wrap_content"
     android:padding="16dp">
 
+    <!-- Question Text -->
     <TextView
         android:id="@+id/questionTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Question"
         android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@id/editButton"
+        android:layout_marginEnd="16dp"
+        android:layout_alignParentTop="true"/>
 
-    <View
+    <!-- Edit Button -->
+    <ImageView
         android:id="@+id/editButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_edit"
         android:contentDescription="Edit"
-        android:background="@drawable/ic_edit" />
+        android:layout_marginStart="16dp"/>
 
-    <View
+    <!-- Delete Button -->
+    <ImageView
         android:id="@+id/deleteButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/editButton"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:layout_alignParentEnd="true"
+        android:layout_below="@id/editButton"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/ic_delete"
         android:contentDescription="Delete"
-        android:background="@drawable/ic_delete" />
+        android:layout_marginStart="16dp"/>
+
 </RelativeLayout>

@@ -20,8 +20,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private FlashcardAdapter flashcardAdapter;
-    private List<Flashcard> flashcardList;
+    private FlashCardAdapter flashcardAdapter;
+    private List<FlashCard> flashcardList;
     private FloatingActionButton addFlashcardButton;
     private DatabaseReference databaseReference;
 

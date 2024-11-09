@@ -1,0 +1,5 @@
+<!-- res/drawable/flashcard_background.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#FFEB3B"/> <!-- Change color code as per your requirement -->
+    <corners android:radius="16dp"/> <!-- Optional: rounded corners -->
+</shape>

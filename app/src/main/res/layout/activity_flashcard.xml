@@ -1,0 +1,51 @@
+<!-- activity_flashcard.xml -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Flashcard View -->
+    <FrameLayout
+        android:id="@+id/flashcard_container"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp">
+
+        <TextView
+            android:id="@+id/flashcard_question"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="Question"
+            android:textSize="18sp"
+            android:textColor="#000" />
+
+        <TextView
+            android:id="@+id/flashcard_answer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="Answer"
+            android:textSize="18sp"
+            android:textColor="#000"
+            android:visibility="gone" /> <!-- Initially hidden -->
+    </FrameLayout>
+
+    <!-- Mark as Known Button -->
+    <Button
+        android:id="@+id/btn_mark_known"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/flashcard_container"
+        android:layout_centerHorizontal="true"
+        android:text="Mark as Known" />
+
+    <!-- Shuffle Button -->
+    <Button
+        android:id="@+id/btn_shuffle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_mark_known"
+        android:layout_centerHorizontal="true"
+        android:text="Shuffle Cards" />
+</RelativeLayout>
