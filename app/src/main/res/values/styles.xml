@@ -1,0 +1,5 @@
+<resources>
+    <style name="Theme.Splash" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowFullscreen">true</item> <!-- Make splash screen full-screen -->
+    </style>
+</resources>
