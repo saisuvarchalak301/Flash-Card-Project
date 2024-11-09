@@ -6,7 +6,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import com.google.firebase.firestore.FirebaseFirestore;  // Ensure FirebaseFirestore is imported
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,9 +37,8 @@ public class FlashCardActivity extends AppCompatActivity {
 
         flashCards = new ArrayList<>();
 
-        // Example: Adding Flashcards (You can fetch them from Firebase)
-        flashCards.add(new FlashCard("1", "What is Android?", "Android is an OS for mobile devices.", false));
-        flashCards.add(new FlashCard("2", "What is Java?", "Java is a programming language.", false));
+        // Load flashcards from Firestore
+        loadFlashCardsFromFirestore();
 
         // Set up initial flashcard
         displayFlashCard();
@@ -52,11 +53,33 @@ public class FlashCardActivity extends AppCompatActivity {
         btnShuffle.setOnClickListener(v -> shuffleCards());
     }
 
+    private void loadFlashCardsFromFirestore() {
+        db.collection("flashcards")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    flashCards.clear();  // Clear any previously loaded cards
+                    for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                        FlashCard flashCard = document.toObject(FlashCard.class);
+                        if (flashCard != null) {
+                            flashCard.setId(document.getId()); // Set Firestore document ID
+                            flashCards.add(flashCard);
+                        }
+                    }
+                    if (flashCards.size() > 0) {
+                        displayFlashCard(); // Show the first card
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(FlashCardActivity.this, "Error loading flashcards", Toast.LENGTH_SHORT).show();
+                });
+    }
+
     private void displayFlashCard() {
         if (flashCards.size() > 0) {
             FlashCard currentCard = flashCards.get(currentCardIndex);
             questionView.setText(currentCard.getQuestion());
             answerView.setText(currentCard.getAnswer());
+            answerView.setVisibility(View.GONE); // Initially hide the answer
         }
     }
 
@@ -74,17 +97,19 @@ public class FlashCardActivity extends AppCompatActivity {
     }
 
     private void markCardAsKnown() {
-        FlashCard currentCard = flashCards.get(currentCardIndex);
-        currentCard.setKnown(true); // Mark the card as known
-        db.collection("flashcards")
-                .document(currentCard.getId()) // Use the card ID for the document ID
-                .update("isKnown", true)
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(FlashCardActivity.this, "Marked as known!", Toast.LENGTH_SHORT).show();
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(FlashCardActivity.this, "Error updating", Toast.LENGTH_SHORT).show();
-                });
+        if (flashCards.size() > 0) {
+            FlashCard currentCard = flashCards.get(currentCardIndex);
+            currentCard.setKnown(true); // Mark the card as known
+            db.collection("flashcards")
+                    .document(currentCard.getId()) // Use the card ID for the document ID
+                    .update("isKnown", true)
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(FlashCardActivity.this, "Marked as known!", Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(FlashCardActivity.this, "Error updating", Toast.LENGTH_SHORT).show();
+                    });
+        }
     }
 
     private void shuffleCards() {
