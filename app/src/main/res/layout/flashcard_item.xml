@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -7,6 +8,24 @@
         android:id="@+id/questionTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Question"
         android:textSize="18sp"
-        android:textColor="#000" />
+        android:textStyle="bold" />
+
+    <View
+        android:id="@+id/editButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:contentDescription="Edit"
+        android:background="@drawable/ic_edit" />
+
+    <View
+        android:id="@+id/deleteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editButton"
+        android:layout_alignParentEnd="true"
+        android:contentDescription="Delete"
+        android:background="@drawable/ic_delete" />
 </RelativeLayout>

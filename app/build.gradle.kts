@@ -1,5 +1,9 @@
 plugins {
-    alias(libs.plugins.android.application)
+    // Use either one of these, but not both
+    alias(libs.plugins.android.application) // If you have configured a version catalog (libs)
+    // OR
+    // id("com.android.application") // Use this if you're not using the version catalog
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -32,7 +36,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -40,4 +43,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
+    implementation("com.google.firebase:firebase-analytics")
 }
