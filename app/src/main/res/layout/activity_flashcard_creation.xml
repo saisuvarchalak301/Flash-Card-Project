@@ -8,17 +8,26 @@
         android:id="@+id/questionEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter question" />
+        android:hint="Enter Question"
+        android:inputType="text"/>
 
     <EditText
         android:id="@+id/answerEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter answer" />
+        android:hint="Enter Answer"
+        android:inputType="text"/>
+
+    <EditText
+        android:id="@+id/categoryEditText"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="Enter Category"
+    android:inputType="text"/>
 
     <Button
         android:id="@+id/saveButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Save" />
+        android:text="Save Flashcard"/>
 </LinearLayout>

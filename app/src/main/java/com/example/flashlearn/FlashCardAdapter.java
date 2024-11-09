@@ -48,15 +48,16 @@ public class FlashCardAdapter extends RecyclerView.Adapter<FlashCardAdapter.View
 
         // Set an onClickListener to open the FlashcardViewActivity when the item is clicked
         holder.itemView.setOnClickListener(view -> {
+            // Intent to open FlashcardViewActivity
             Intent intent = new Intent(context, FlashcardViewActivity.class);
-            intent.putExtra("flashcardId", flashcard.getId());
+            intent.putExtra("flashcardId", flashcard.getId()); // Get the flashcard ID
             context.startActivity(intent);
         });
 
         // Set an onClickListener to open the EditFlashcardActivity when the "edit" button is clicked
         holder.editButton.setOnClickListener(view -> {
             Intent intent = new Intent(context, EditFlashcardActivity.class);
-            intent.putExtra("flashcardId", flashcard.getId());
+            intent.putExtra("flashcardId", flashcard.getId()); // Pass the flashcard ID for editing
             context.startActivity(intent);
         });
 
@@ -64,10 +65,12 @@ public class FlashCardAdapter extends RecyclerView.Adapter<FlashCardAdapter.View
         holder.deleteButton.setOnClickListener(view -> {
             // Remove the flashcard from Firebase Database
             databaseReference.child(flashcard.getId()).removeValue()
-                    .addOnSuccessListener(aVoid ->
-                            Toast.makeText(context, "Flashcard deleted", Toast.LENGTH_SHORT).show())
-                    .addOnFailureListener(e ->
-                            Toast.makeText(context, "Failed to delete flashcard", Toast.LENGTH_SHORT).show());
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(context, "Flashcard deleted", Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(context, "Failed to delete flashcard", Toast.LENGTH_SHORT).show();
+                    });
         });
     }
 

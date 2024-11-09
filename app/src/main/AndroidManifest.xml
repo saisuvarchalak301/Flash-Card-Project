@@ -37,10 +37,10 @@
         </activity>
 
         <!-- Flashcard Edit Activity -->
-        <activity
-            android:name=".FlashcardEditActivity"
-            android:exported="true">
+        <activity android:name=".EditFlashcardActivity">
+            <!-- Optional: You can add other configurations if needed -->
         </activity>
+
 
     </application>
 

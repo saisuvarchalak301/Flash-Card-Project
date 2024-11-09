@@ -3,6 +3,8 @@ package com.example.flashlearn;
 import android.os.Bundle;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 public class FlashcardViewActivity extends AppCompatActivity {
 
@@ -18,20 +20,32 @@ public class FlashcardViewActivity extends AppCompatActivity {
         answerTextView = findViewById(R.id.answerTextView);
 
         // Get the flashcard ID passed through the intent
-        String flashcardId = getIntent().getStringExtra("flashcardId");
+        String flashcardId = getIntent().getStringExtra("flashcard_id");
 
-        // Fetch the flashcard from Firebase using the flashcardId (you can implement this logic)
-        // For now, assume we have a dummy flashcard object
-        FlashCard flashCard = getFlashCardById(flashcardId);
-
-        // Set the question and answer
-        questionTextView.setText(flashCard.getQuestion());
-        answerTextView.setText(flashCard.getAnswer());
+        // Fetch the flashcard from Firebase using the flashcardId
+        fetchFlashcardFromFirestore(flashcardId);
     }
 
-    private FlashCard getFlashCardById(String flashcardId) {
-        // You can implement Firebase fetching logic here
-        // For now, returning a dummy flashcard
-        return new FlashCard("Dummy Question", "Dummy Answer");
+    private void fetchFlashcardFromFirestore(String flashcardId) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // Fetch flashcard from Firestore
+        db.collection("flashcards").document(flashcardId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        // Get the flashcard data from Firestore
+                        FlashCard flashCard = documentSnapshot.toObject(FlashCard.class);
+
+                        // Set the question and answer on the TextViews
+                        if (flashCard != null) {
+                            questionTextView.setText(flashCard.getQuestion());
+                            answerTextView.setText(flashCard.getAnswer());
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    // Handle failure
+                });
     }
 }

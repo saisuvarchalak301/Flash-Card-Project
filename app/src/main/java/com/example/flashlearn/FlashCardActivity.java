@@ -6,8 +6,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.firebase.firestore.FirebaseFirestore;  // Ensure FirebaseFirestore is imported
 
-import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -23,13 +23,11 @@ public class FlashCardActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Correct layout for FlashCardActivity
-        setContentView(R.layout.activity_flashcard);  // Use the correct layout file
+        setContentView(R.layout.activity_flashcard);  // Correct layout reference
 
         // Initialize Firebase Firestore
         db = FirebaseFirestore.getInstance();
 
-        // Initialize views
         questionView = findViewById(R.id.flashcard_question);
         answerView = findViewById(R.id.flashcard_answer);
         btnMarkKnown = findViewById(R.id.btn_mark_known);
@@ -38,8 +36,8 @@ public class FlashCardActivity extends AppCompatActivity {
         flashCards = new ArrayList<>();
 
         // Example: Adding Flashcards (You can fetch them from Firebase)
-        flashCards.add(new FlashCard("What is Android?", "Android is an OS for mobile devices."));
-        flashCards.add(new FlashCard("What is Java?", "Java is a programming language."));
+        flashCards.add(new FlashCard("1", "What is Android?", "Android is an OS for mobile devices.", false));
+        flashCards.add(new FlashCard("2", "What is Java?", "Java is a programming language.", false));
 
         // Set up initial flashcard
         displayFlashCard();
@@ -54,7 +52,6 @@ public class FlashCardActivity extends AppCompatActivity {
         btnShuffle.setOnClickListener(v -> shuffleCards());
     }
 
-    // Display current flashcard question and answer
     private void displayFlashCard() {
         if (flashCards.size() > 0) {
             FlashCard currentCard = flashCards.get(currentCardIndex);
@@ -63,8 +60,8 @@ public class FlashCardActivity extends AppCompatActivity {
         }
     }
 
-    // Flip the flashcard to show answer or question
     private void flipFlashCard() {
+        // Flip animation to reveal answer
         if (answerView.getVisibility() == View.VISIBLE) {
             // Flip back to question
             questionView.setVisibility(View.VISIBLE);
@@ -76,14 +73,11 @@ public class FlashCardActivity extends AppCompatActivity {
         }
     }
 
-    // Mark the current flashcard as known
     private void markCardAsKnown() {
         FlashCard currentCard = flashCards.get(currentCardIndex);
-        currentCard.setKnown(true);  // Mark the card as known
-
-        // Update Firestore
+        currentCard.setKnown(true); // Mark the card as known
         db.collection("flashcards")
-                .document(String.valueOf(currentCardIndex))  // Using the card index as the document ID
+                .document(currentCard.getId()) // Use the card ID for the document ID
                 .update("isKnown", true)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(FlashCardActivity.this, "Marked as known!", Toast.LENGTH_SHORT).show();
@@ -93,10 +87,9 @@ public class FlashCardActivity extends AppCompatActivity {
                 });
     }
 
-    // Shuffle flashcards and reset to the first card
     private void shuffleCards() {
         Collections.shuffle(flashCards);
-        currentCardIndex = 0;  // Reset to the first card
+        currentCardIndex = 0; // Reset to the first card
         displayFlashCard();  // Display shuffled cards
     }
 }

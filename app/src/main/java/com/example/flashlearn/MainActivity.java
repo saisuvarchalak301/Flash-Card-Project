@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         // Initialize RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         flashcardList = new ArrayList<>();
-        flashcardAdapter = new FlashcardAdapter(flashcardList, this);
+        flashcardAdapter = new FlashCardAdapter(flashcardList, this);
         recyclerView.setAdapter(flashcardAdapter);
 
         // Load flashcards from Firebase
@@ -49,22 +49,27 @@ public class MainActivity extends AppCompatActivity {
         addFlashcardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, AddFlashcardActivity.class));
+                // Navigate to the Flashcard creation activity
+                Intent intent = new Intent(MainActivity.this, FlashcardCreationActivity.class);
+                startActivity(intent);
             }
         });
     }
 
     private void loadFlashcardsFromFirebase() {
+        // Retrieve flashcards from Firebase
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                flashcardList.clear();
+                flashcardList.clear(); // Clear previous data
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    Flashcard flashcard = dataSnapshot.getValue(Flashcard.class);
+                    // Parse each flashcard from Firebase
+                    FlashCard flashcard = dataSnapshot.getValue(FlashCard.class);
                     if (flashcard != null) {
-                        flashcardList.add(flashcard);
+                        flashcardList.add(flashcard); // Add flashcard to list
                     }
                 }
+                // Notify the adapter that the data set has changed
                 flashcardAdapter.notifyDataSetChanged();
             }
 

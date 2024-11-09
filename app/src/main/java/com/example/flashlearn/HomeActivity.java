@@ -4,23 +4,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-
+import com.google.firebase.firestore.DocumentSnapshot;
 import java.util.ArrayList;
-import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
+
     private RecyclerView recyclerView;
-    private FlashCardAdapter adapter;
-    private List<FlashCard> flashcardList;
+    private FlashCardAdapter flashCardAdapter;
+    private ArrayList<FlashCard> flashcards;
     private FirebaseFirestore db;
 
     @Override
@@ -28,44 +23,42 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        // Initialize Firestore
+        recyclerView = findViewById(R.id.recycler_view);  // Updated to match XML ID
+        flashcards = new ArrayList<>();
         db = FirebaseFirestore.getInstance();
 
-        // Setup RecyclerView
-        recyclerView = findViewById(R.id.recyclerView);
+        // Set up RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        flashcardList = new ArrayList<>();
-        adapter = new FlashCardAdapter(flashcardList, this);
-        recyclerView.setAdapter(adapter);
+        flashCardAdapter = new FlashCardAdapter(flashcards, this);
+        recyclerView.setAdapter(flashCardAdapter);
 
         // Load flashcards from Firestore
         loadFlashcards();
 
-        // Floating Action Button to add a new flashcard
-        FloatingActionButton addButton = findViewById(R.id.addButton);
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(HomeActivity.this, FlashcardCreationActivity.class));
-            }
+        // Floating Action Button (FAB) to create a new flashcard
+        findViewById(R.id.fab_add).setOnClickListener(view -> {  // Updated to match XML ID
+            Intent intent = new Intent(HomeActivity.this, FlashcardCreationActivity.class);
+            startActivity(intent);
         });
     }
 
     private void loadFlashcards() {
         db.collection("flashcards")
                 .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        flashcardList.clear();
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            FlashCard flashcard = document.toObject(FlashCard.class);
-                            flashcard.setId(document.getId());
-                            flashcardList.add(flashcard);
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    flashcards.clear();
+                    for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                        FlashCard flashCard = document.toObject(FlashCard.class);
+                        if (flashCard != null) {
+                            flashCard.setId(document.getId());
+                            flashcards.add(flashCard);
                         }
-                        adapter.notifyDataSetChanged();
-                    } else {
-                        Toast.makeText(HomeActivity.this, "Failed to load flashcards", Toast.LENGTH_SHORT).show();
                     }
+                    flashCardAdapter.notifyDataSetChanged();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(HomeActivity.this, "Error loading flashcards", Toast.LENGTH_SHORT).show();
+                    e.printStackTrace(); // Log the error for debugging purposes
                 });
     }
 }
