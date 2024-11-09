@@ -52,4 +52,6 @@ dependencies {
 
     // Firebase Realtime Database
     implementation("com.google.firebase:firebase-database:20.1.0") // Add this line
+    implementation("com.google.firebase:firebase-firestore:24.0.0")
+    implementation("com.google.firebase:firebase-auth:21.0.0")
 }

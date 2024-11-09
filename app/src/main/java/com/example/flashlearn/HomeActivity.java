@@ -8,7 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 
 public class HomeActivity extends AppCompatActivity {
@@ -36,7 +37,7 @@ public class HomeActivity extends AppCompatActivity {
         loadFlashcards();
 
         // Floating Action Button (FAB) to create a new flashcard
-        findViewById(R.id.fab_add).setOnClickListener(view -> {  // Updated to match XML ID
+        findViewById(R.id.fab_add).setOnClickListener(view -> {
             Intent intent = new Intent(HomeActivity.this, FlashcardCreationActivity.class);
             startActivity(intent);
         });
@@ -47,12 +48,10 @@ public class HomeActivity extends AppCompatActivity {
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     flashcards.clear();
-                    for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         FlashCard flashCard = document.toObject(FlashCard.class);
-                        if (flashCard != null) {
-                            flashCard.setId(document.getId());
-                            flashcards.add(flashCard);
-                        }
+                        flashCard.setId(document.getId());
+                        flashcards.add(flashCard);
                     }
                     flashCardAdapter.notifyDataSetChanged();
                 })

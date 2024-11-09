@@ -7,7 +7,7 @@ public class FlashCard {
     private String answer;
     private boolean isKnown;
 
-    // Constructor that takes question, answer, and isKnown flag
+    // Constructor
     public FlashCard(String id, String question, String answer, boolean isKnown) {
         this.id = id;
         this.question = question;
@@ -15,7 +15,7 @@ public class FlashCard {
         this.isKnown = isKnown;
     }
 
-    // Getters and setters
+    // Getters and Setters
     public String getId() {
         return id;
     }

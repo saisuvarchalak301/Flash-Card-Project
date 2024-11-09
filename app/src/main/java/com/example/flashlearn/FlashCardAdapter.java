@@ -12,8 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
@@ -21,13 +20,13 @@ public class FlashCardAdapter extends RecyclerView.Adapter<FlashCardAdapter.View
 
     private List<FlashCard> flashcardList;
     private Context context;
-    private DatabaseReference databaseReference;
+    private FirebaseFirestore db;
 
     // Constructor to initialize the list of flashcards and context
     public FlashCardAdapter(List<FlashCard> flashcardList, Context context) {
         this.flashcardList = flashcardList;
         this.context = context;
-        this.databaseReference = FirebaseDatabase.getInstance().getReference("flashcards");
+        this.db = FirebaseFirestore.getInstance();
     }
 
     @NonNull
@@ -63,8 +62,9 @@ public class FlashCardAdapter extends RecyclerView.Adapter<FlashCardAdapter.View
 
         // Set an onClickListener to delete the flashcard when the "delete" button is clicked
         holder.deleteButton.setOnClickListener(view -> {
-            // Remove the flashcard from Firebase Database
-            databaseReference.child(flashcard.getId()).removeValue()
+            // Remove the flashcard from Firestore
+            db.collection("flashcards").document(flashcard.getId())
+                    .delete()
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(context, "Flashcard deleted", Toast.LENGTH_SHORT).show();
                     })

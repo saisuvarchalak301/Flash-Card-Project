@@ -1,10 +1,11 @@
 package com.example.flashlearn;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.DocumentSnapshot;
 
 public class FlashcardViewActivity extends AppCompatActivity {
 
@@ -19,33 +20,46 @@ public class FlashcardViewActivity extends AppCompatActivity {
         questionTextView = findViewById(R.id.questionTextView);
         answerTextView = findViewById(R.id.answerTextView);
 
-        // Get the flashcard ID passed through the intent
-        String flashcardId = getIntent().getStringExtra("flashcard_id");
+        // Get the flashcard ID from the Intent
+        String flashcardId = getIntent().getStringExtra("flashcardId");
 
-        // Fetch the flashcard from Firebase using the flashcardId
-        fetchFlashcardFromFirestore(flashcardId);
-    }
+        if (flashcardId == null) {
+            // Show an error if no flashcardId is passed
+            Toast.makeText(this, "No flashcard ID provided", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
-    private void fetchFlashcardFromFirestore(String flashcardId) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        // Fetch flashcard from Firestore
-        db.collection("flashcards").document(flashcardId)
+        // Fetch the flashcard data from Firestore
+        FirebaseFirestore.getInstance().collection("flashcards")
+                .document(flashcardId)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        // Get the flashcard data from Firestore
                         FlashCard flashCard = documentSnapshot.toObject(FlashCard.class);
-
-                        // Set the question and answer on the TextViews
                         if (flashCard != null) {
+                            // Set the question and answer text
                             questionTextView.setText(flashCard.getQuestion());
                             answerTextView.setText(flashCard.getAnswer());
+                        } else {
+                            Toast.makeText(FlashcardViewActivity.this, "Flashcard not found", Toast.LENGTH_SHORT).show();
                         }
+                    } else {
+                        Toast.makeText(FlashcardViewActivity.this, "Flashcard does not exist", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(e -> {
-                    // Handle failure
+                    // Handle error
+                    Toast.makeText(FlashcardViewActivity.this, "Error fetching flashcard", Toast.LENGTH_SHORT).show();
                 });
+
+        // Toggle the visibility of the answer when the question is clicked
+        questionTextView.setOnClickListener(v -> {
+            if (answerTextView.getVisibility() == View.GONE) {
+                answerTextView.setVisibility(View.VISIBLE);  // Show the answer
+            } else {
+                answerTextView.setVisibility(View.GONE);     // Hide the answer
+            }
+        });
     }
 }
